@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+    #version 300 es
+    in vec4 aPosition;
+    in vec4 aColor;
+
+    uniform mat4 modelViewMatrix;
+    uniform mat4 projectionMatrix;
+
+    out vec4 vColor;
+
+    void main() {
+        vColor = aColor;  // Pass color to fragment shader
+        gl_Position = projectionMatrix * modelViewMatrix * aPosition;
+        gl_PointSize = 25.0;  // Adjust point size for joints
+    }
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+    #version 300 es
+    precision mediump float;
+
+    in vec4 vColor;
+    out vec4 fragColor;
+
+    void main() {
+        // Create a circular mask
+        vec2 coord = 2.0 * gl_PointCoord - 1.0;
+        if (dot(coord, coord) > 1.0) {
+            discard;  // Discard fragments outside the circle
+        }
+
+        fragColor = vColor;  // Use passed color or a specific color
+    }
+</script>
+
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MVnew.js"></script>
+<script type="text/javascript" src="robotArm.js"></script>
+
+<div>
+    body angle -180 <input id="slider1" type="range"
+                           min="-180" max="180" step="1" value="30"
+/>
+    180
+</div><br/>
+
+<div>
+    lower arm angle -80 <input id="slider2" type="range"
+                               min="-80" max="80" step="1" value="-80"
+/>
+    80
+</div><br/>
+
+<div>
+    upper arm angle -130 <input id="slider3" type="range"
+                                min="-130" max="130" step="1" value="130"
+/>
+    130
+</div><br/>
+
+<div>
+    claw open
+    <input id="slider4" type="range"
+           min="0" max="30" step="1" value="30"
+    />
+    closed
+</div><br/>
+
+
+<body>
+<canvas id="gl-canvas" width="1800" height="600">
+    Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

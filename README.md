@@ -1,1 +1,2 @@
-# RobotArm
+# Robot Arm
+![](robotArm.png)
